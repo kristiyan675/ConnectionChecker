@@ -1,8 +1,8 @@
 const axios = require("axios");
+require("dotenv").config();
 
 // replace API key
-const key =
-  "5bced20af08836f249e834d2e2da350b844fbddd3f9d00dc084bdf47fecba24b994f80412c72babb";
+const key = process.env.apiKey;
 
 async function checkIP(ip) {
   const response = await axios.get(`https://api.abuseipdb.com/api/v2/check`, {
