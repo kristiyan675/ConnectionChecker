@@ -10,8 +10,9 @@ function getCommand() {
     case "win32":
       return "netstat -an";
     case "darwin":
+      return "netstat -an";
     case "linux":
-      return "netstat -anp tcp";
+      return "ss -atun";
     default:
       throw new Error("Unsupported OS");
   }
@@ -19,6 +20,7 @@ function getCommand() {
 
 function parseNetstat(output) {
   const lines = output.split("\n");
+  console.log(lines, "---------------------------1");
   const connections = lines
     .slice(4) // Skip the header lines
     .map((line) => line.trim().split(/\s+/))
@@ -29,17 +31,43 @@ function parseNetstat(output) {
       foreignAddress: fields[2],
       state: fields[3] || "UNKNOWN",
     }));
+  console.log(connections, "-------------------------2");
+  return connections;
+}
+
+function parseSS(output) {
+  const lines = output.split("\n");
+  console.log(lines, "---------------------------1");
+  const connections = lines
+    .filter((line) => line.trim() !== "") // Filter out empty lines
+    .slice(1) // Skip the header line
+    .map((line) => line.trim().split(/\s+/))
+    .filter((fields) => fields.length >= 6)
+    .map((fields) => ({
+      proto: fields[0],
+      state: fields[1],
+      localAddress: fields[4],
+      foreignAddress: fields[5],
+      process: fields[6] || "UNKNOWN",
+    }));
+
+  console.log(connections, "-------------------------2");
   return connections;
 }
 
 function getActiveConnections() {
   const command = getCommand();
+  let connections;
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
         return reject(error);
       }
-      const connections = parseNetstat(stdout);
+      if (command.startsWith("netstat")) {
+        connections = parseNetstat(stdout);
+      } else {
+        connections = parseSS(stdout);
+      }
       resolve(connections);
     });
   });
@@ -48,7 +76,7 @@ function getActiveConnections() {
 const logFilePath =
   process.env.SystemRoot + "\\System32\\LogFiles\\Firewall\\pfirewall.log";
 
-function getPastConnections(limit = 10) {
+function getPastConnections() {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(logFilePath)) {
       console.log(
@@ -57,7 +85,7 @@ function getPastConnections(limit = 10) {
       resolve([]); // Resolve with an empty array if the log file is not found
       return;
     }
-
+    const entryLimit = -10; // for demo purposes we only use last few entries
     const logStream = fs.createReadStream(logFilePath);
     const rl = readline.createInterface({
       input: logStream,
@@ -82,6 +110,8 @@ function getPastConnections(limit = 10) {
 
       // Create an object with the parsed log entry
       const logEntry = {
+        Date: columns[0],
+        Time: columns[1],
         Action: columns[2],
         foreignAddress,
       };
@@ -90,15 +120,10 @@ function getPastConnections(limit = 10) {
       if (logEntry.Action === "ALLOW") {
         connections.push(logEntry);
       }
-      console.log(limit, "limit  LLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOl");
-      console.log(connections.limit, "l o");
-      if (connections.length >= limit) {
-        rl.close();
-      }
     });
 
     rl.on("close", () => {
-      resolve(connections); // Resolve the promise with the collected connections
+      resolve(connections.slice(entryLimit)); // Resolve the promise with the last (limit) collected connections
     });
 
     rl.on("error", (error) => {

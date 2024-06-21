@@ -4,22 +4,26 @@ const {
   resolveHostname,
   isValidIp,
 } = require("./networkCheck");
-// const { checkIP } = require("./ipCheck");
+const { checkIP } = require("./ipCheck");
 
 async function main() {
   try {
     // Get current connections
     const currentConnections = await getActiveConnections();
-    console.log("Current connections:", currentConnections);
 
     // Get past connections
     const pastConnections = await getPastConnections();
 
-    console.log("Past connections:", pastConnections, pastConnections.length);
+    // Known malicious IPs for testing
+    const maliciousIps = [
+      "171.25.193.20",
+      "50.114.115.79",
+      "176.65.240.102",
+      "101.126.35.124",
+    ];
 
     // Combine current and past connections
-    // const allConnections = [...currentConnections, ...pastConnections];
-    const allConnections = [...currentConnections];
+    const allConnections = [...currentConnections, ...pastConnections];
 
     const foreignIPs = allConnections.map((conn) => {
       const ip = conn.foreignAddress.split(":")[0].trim();
@@ -40,14 +44,14 @@ async function main() {
       return isValid;
     });
 
-    const uniqueIPs = [...new Set(filteredIPs)];
+    const uniqueIPs = [...new Set(filteredIPs), ...maliciousIps];
     console.log("Unique IPs:", uniqueIPs); // Log unique IPs
 
     const resolvedHostnames = await Promise.all(
       uniqueIPs.map((ip) => resolveHostname(ip))
     );
     console.log("Resolved Hostnames:", resolvedHostnames);
-
+    console.log(resolvedHostnames);
     // for (const { ip, hostname } of resolvedHostnames) {
     //   const result = await checkIP(ip);
     //   console.log(`IP: ${ip}, Hostname: ${hostname} - Result:`, result);
