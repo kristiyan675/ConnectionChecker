@@ -51,7 +51,7 @@ async function main() {
       uniqueIPs.map((ip) => resolveHostname(ip))
     );
     console.log("Resolved Hostnames:", resolvedHostnames);
-    console.log(resolvedHostnames);
+
     // for (const { ip, hostname } of resolvedHostnames) {
     //   const result = await checkIP(ip);
     //   console.log(`IP: ${ip}, Hostname: ${hostname} - Result:`, result);
