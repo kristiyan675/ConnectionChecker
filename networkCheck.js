@@ -165,7 +165,7 @@ function getPastConnections() {
             foreignAddress,
           };
 
-          connections.push((logEntry, " here linesTHERE----------"));
+          connections.push(logEntry);
         });
 
         resolve(connections.slice(-10)); // Resolve the promise with the last 10 collected connections

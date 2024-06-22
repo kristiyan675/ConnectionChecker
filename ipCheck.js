@@ -20,7 +20,6 @@ async function checkIP(ip) {
 async function checkIPs(ips) {
   for (let ip of ips) {
     const result = await checkIP(ip);
-    console.log(result);
   }
 }
 
