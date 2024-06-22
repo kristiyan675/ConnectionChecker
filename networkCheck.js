@@ -45,10 +45,9 @@ function parseSS(output) {
     .filter((fields) => fields.length >= 6)
     .map((fields) => ({
       proto: fields[0],
-      state: fields[1],
       localAddress: fields[4],
       foreignAddress: fields[5],
-      process: fields[6] || "UNKNOWN",
+      state: fields[1],
     }));
 
   console.log(connections, "-------------------------2");
