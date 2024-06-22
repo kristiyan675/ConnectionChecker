@@ -10,10 +10,10 @@ async function main() {
   try {
     // Get current connections
     const currentConnections = await getActiveConnections();
-
+    console.log(currentConnections);
     // Get past connections
     const pastConnections = await getPastConnections();
-
+    console.log(pastConnections);
     // Known malicious IPs for testing
     const maliciousIps = [
       "171.25.193.20",
