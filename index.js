@@ -49,7 +49,7 @@ async function main() {
     );
     console.log("Resolved Hostnames:", resolvedHostnames);
 
-    console.log("REPORT: ");
+    console.log("API REPORT : \n");
     for (const { ip, hostname } of resolvedHostnames) {
       const result = await checkIP(ip);
       console.log(`IP: ${ip}, Hostname: ${hostname} - Result:`, result);
