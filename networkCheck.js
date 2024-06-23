@@ -101,7 +101,7 @@ function getPastConnections() {
           const parts = line.split(" ");
           const date = `${parts[0]} ${parts[1]}`;
           const time = parts[2];
-          const action = parts.includes("ACCEPT") ? "ALLOW" : "DENY";
+          const action = parts[6].includes("ACCEPT") ? "ALLOW" : "DENY";
 
           const inIndex = parts.findIndex((part) => part.startsWith("IN="));
 
