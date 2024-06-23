@@ -17,13 +17,6 @@ async function checkIP(ip) {
   return response.data;
 }
 
-async function checkIPs(ips) {
-  for (let ip of ips) {
-    const result = await checkIP(ip);
-  }
-}
-
 module.exports = {
   checkIP,
-  checkIPs,
 };

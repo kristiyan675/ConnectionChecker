@@ -1,9 +1,5 @@
-const {
-  getPastConnections,
-  getActiveConnections,
-  resolveHostname,
-  isValidIp,
-} = require("./networkCheck");
+const { getPastConnections, getActiveConnections } = require("./networkCheck");
+const { isValidIp, resolveHostname } = require("./utils");
 const { checkIP } = require("./ipCheck");
 
 async function main() {
@@ -14,6 +10,7 @@ async function main() {
     // Get past connections
     const pastConnections = await getPastConnections();
     console.log("PAST CONNECTIONS ", pastConnections);
+
     // Known malicious IPs for testing
     const maliciousIps = [
       "171.25.193.20",
@@ -52,12 +49,13 @@ async function main() {
     );
     console.log("Resolved Hostnames:", resolvedHostnames);
 
-    // for (const { ip, hostname } of resolvedHostnames) {
-    //   const result = await checkIP(ip);
-    //   console.log(`IP: ${ip}, Hostname: ${hostname} - Result:`, result);
-    // }
-  } catch (error) {
-    console.error("Error:", error);
+    console.log("REPORT: ");
+    for (const { ip, hostname } of resolvedHostnames) {
+      const result = await checkIP(ip);
+      console.log(`IP: ${ip}, Hostname: ${hostname} - Result:`, result);
+    }
+  } catch (e) {
+    console.log("Error:", e);
   }
 }
 
