@@ -94,8 +94,9 @@ function getPastConnections() {
         }
 
         const lines = stdout.trim().split("\n");
+
         const connections = [];
-        // console.log(lines, " here lines----------------");
+        console.log(lines, " here lines----------------");
         lines.forEach((line) => {
           const parts = line.split(" ");
           const date = `${parts[0]} ${parts[1]}`;
