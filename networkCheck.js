@@ -102,13 +102,17 @@ function getPastConnections() {
           const date = `${parts[0]} ${parts[1]}`;
           const time = parts[2];
           const action = parts.includes("ACCEPT") ? "ALLOW" : "DENY";
-          const direction = parts[5].includes("IPTables-INPUT")
-            ? "RECEIVE"
-            : "SEND";
+
+          const inIndex = parts.findIndex((part) => part.startsWith("IN="));
+
+          const direction =
+            parts[inIndex].split("=")[1] !== "*" ? "RECEIVE" : "SEND";
+
           const ipIndex =
             direction === "RECEIVE"
               ? parts.findIndex((part) => part.startsWith("SRC="))
               : parts.findIndex((part) => part.startsWith("DST="));
+
           const foreignAddress = parts[ipIndex].split("=")[1];
 
           const logEntry = {
