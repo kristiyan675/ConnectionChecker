@@ -85,7 +85,7 @@ function getPastConnections() {
       });
     } else {
       // Linux environment
-      const grepCommand = `grep 'IPTables-INPUT\\|IPTables-OUTPUT' /var/log/syslog`;
+      const grepCommand = `grep 'IPTables-ACCEPT' /var/log/syslog`;
 
       exec(grepCommand, (error, stdout, stderr) => {
         if (error) {
