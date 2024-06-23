@@ -117,7 +117,9 @@ function getPastConnections() {
             foreignAddress,
           };
 
-          connections.push(logEntry);
+          if (logEntry.Action === "ALLOW") {
+            connections.push(logEntry);
+          }
         });
         resolve(connections.slice(-10)); // Resolve the promise with the last 10 collected connections for demo purposes
       });
