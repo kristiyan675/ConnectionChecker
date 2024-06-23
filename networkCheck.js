@@ -119,7 +119,6 @@ function getPastConnections() {
 
           connections.push(logEntry);
         });
-        console.log("ALL PAST CONNECTIONS --------------");
         resolve(connections.slice(-10)); // Resolve the promise with the last 10 collected connections for demo purposes
       });
     }
