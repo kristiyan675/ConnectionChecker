@@ -17,17 +17,14 @@ Connection Checker is a Node.js application designed to gather network connectio
 
 First, clone the repository to your local machine:
 
-    ```bash
     git clone https://github.com/your-repo/connection-checker.git
 
 ### 2. Move to folder
 
-    ```bash
     cd connection-checker
 
 ### 3. Instal dependencies
 
-    ```bash
     npm install
 
 **Note:** If you are using Linux, you need to run the bash script first. If you are on Windows, you can run `node index.js` directly.
